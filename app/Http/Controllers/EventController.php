@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -35,6 +36,10 @@ class EventController extends Controller
     }
     public function show(Event $event)
     {
-        return view('events.show', ['event' => $event]);
+        if (Auth::user()->role === 'organizer') { {
+                return view('events.organizer.show', ['event' => $event]);
+            }
+            return view('events.show', ['event' => $event]);
+        }
     }
 }
