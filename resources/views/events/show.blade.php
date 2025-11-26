@@ -25,7 +25,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h1 class="card-title">{{ $event->title }}</h1>
 
-                {{-- Status com badge colorido --}}
+                {{-- Status --}}
                 @php
                     $colors = [
                         'scheduled' => 'primary',
@@ -40,9 +40,7 @@
                 </span>
             </div>
 
-            <p class="text-muted">
-                <strong>Local:</strong> {{ $event->location }}
-            </p>
+            <p class="text-muted"><strong>Local:</strong> {{ $event->location }}</p>
 
             <p class="text-muted">
                 <strong>Data:</strong>
@@ -54,15 +52,69 @@
             <h4>Descrição</h4>
             <p class="mt-2">{{ $event->description }}</p>
 
+            <hr class="my-4">
+
+            {{-- LISTA DE TICKETS --}}
+            <div class="d-flex justify-content-between mb-2">
+                <h4>Tickets do Evento</h4>
+
+                <a href="{{ route('tickets.create', $event->id) }}" class="btn btn-primary">
+                    + Criar Ticket
+                </a>
+            </div>
+
+            @if($event->tickets->count())
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Preço</th>
+                            <th>Quantidade</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach($event->tickets as $ticket)
+                        <tr>
+                            <td>{{ $ticket->name }}</td>
+                            <td>R$ {{ number_format($ticket->price, 2, ',', '.') }}</td>
+                            <td>{{ $ticket->quantity_total }}</td>
+
+                            <td>
+                                <a href="{{ route('tickets.edit', $ticket->id) }}" class="btn btn-sm btn-outline-primary">
+                                    Editar
+                                </a>
+
+                                <form action="{{ route('tickets.destroy', $ticket->id) }}"
+                                      method="POST"
+                                      class="d-inline"
+                                      onsubmit="return confirm('Excluir este ticket?')">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        Excluir
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+
+                </table>
+
+            @else
+                <p class="text-muted">Nenhum ticket criado ainda.</p>
+            @endif
+
         </div>
 
         <div class="card-footer d-flex justify-content-between">
 
-            {{-- Botão de Editar --}}
             <a href="#" class="btn btn-outline-primary">Editar</a>
 
-            {{-- Botão de Excluir --}}
-            <form action="#" method="POST" 
+            <form action="#" method="POST"
                   onsubmit="return confirm('Tem certeza que deseja excluir este evento?')">
                 @csrf
                 @method('DELETE')

@@ -17,4 +17,8 @@ class Event extends Model
         'banner_image_url',
         'status'
     ];
+
+    public function tickets(){
+        return $this->hasMany(Ticket::class);
+    }
 }
