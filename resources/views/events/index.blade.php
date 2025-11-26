@@ -1,80 +1,45 @@
 @extends('layouts.app')
 
-@section('title', 'Eventos')
-
 @section('content')
-    <div class="container">
+    <div class="max-w-7xl mx-auto px-4 py-10">
+        <h1 class="text-2xl font-bold mb-6">Lista de Eventos</h1>
 
-        <h1 class="mb-4">Lista de Eventos</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach ($events as $event)
+                <div class="bg-gray-800 rounded-xl shadow p-5">
 
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <a href="{{ route('events.create') }}" class="btn btn-primary mb-4">
-            Criar Novo Evento
-        </a>
-
-        @if ($events->count() > 0)
-
-            <div class="row g-4">
-                @foreach ($events as $event)
-                    <div class="col-md-4">
-                        <div class="card h-100 shadow-sm">
-
-                            {{-- Banner do evento --}}
-                            @if ($event->banner_image_url)
-                                <img src="{{ $event->banner_image_url }}" class="card-img-top" alt="Banner">
-                            @else
-                                <div class="bg-secondary text-white text-center py-4">
-                                    Sem imagem
-                                </div>
-                            @endif
-
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $event->title }}</h5>
-
-                                <p class="card-text text-muted mb-1">
-                                    {{ $event->location }}
-                                </p>
-
-                                <p class="card-text">
-                                    <strong>Data:</strong> {{ \Carbon\Carbon::parse($event->date_time)->format('d/m/Y') }}
-                                </p>
-
-                                {{-- Badge para status --}}
-                                @php
-                                    $colors = [
-                                        'scheduled' => 'primary',
-                                        'on going' => 'warning',
-                                        'done' => 'success',
-                                        'cancelled' => 'danger',
-                                    ];
-                                @endphp
-
-                                <span class="badge bg-{{ $colors[$event->status] }}">
-                                    {{ ucfirst($event->status) }}
-                                </span>
-
-                                <p class="mt-3 text-truncate" style="max-width: 100%;">
-                                    {{ $event->description }}
-                                </p>
-                            </div>
-
-                            <div class="card-footer text-end">
-                                <a href="{{ route('events.show', $event->id) }}" class="btn btn-sm btn-outline-secondary">Ver
-                                    detalhes</a>
-                            </div>
-
+                    {{-- Imagem --}}
+                    @if ($event->image)
+                        <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-40 object-cover rounded-lg mb-3">
+                    @else
+                        <div class="w-full h-40 bg-gray-700 rounded-lg flex items-center justify-center mb-3">
+                            <span class="text-gray-400 text-sm">Sem imagem</span>
                         </div>
-                    </div>
-                @endforeach
-            </div>
-        @else
-            <p class="text-muted">Nenhum evento cadastrado.</p>
-        @endif
+                    @endif
 
+                    <h2 class="text-lg font-semibold">{{ $event->title }}</h2>
+
+                    <p class="text-gray-300 text-sm mb-1">{{ $event->local }}</p>
+
+                    <p class="text-gray-400 text-sm mb-3">
+                        <strong>Data:</strong>
+                        @if ($event->date)
+                            {{ \Carbon\Carbon::parse($event->date)->format('d/m/Y') }}
+                        @else
+                            <span class="text-gray-400">Sem data</span>
+                        @endif
+
+                    </p>
+
+                    <p class="text-gray-400 text-sm mb-4">
+                        {{ $event->description }}
+                    </p>
+
+                    <a href="{{ route('events.show', $event) }}" class="text-blue-400 hover:text-blue-300">
+                        Ver detalhes →
+                    </a>
+                </div>
+            @endforeach
+        </div>
     </div>
 @endsection

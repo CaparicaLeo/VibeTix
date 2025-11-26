@@ -1,21 +1,55 @@
 <?php
 
-use App\Http\Controllers\EventController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\TicketController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('events.index');
 });
 
-Route::get('/events', [EventController::class, 'index'])->name('events.index');
-Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
-Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
-Route::post('/events', [EventController::class, 'store'])->name('events.store');
 
-Route::post('/events/{event}/tickets', [TicketController::class, 'store'])->name('tickets.store');
-Route::get('/events/{event}/tickets/create', [TicketController::class, 'create'])->name('tickets.create');
-Route::get('/events/{event}/tickets', [TicketController::class, 'index'])->name('tickets.index');
-Route::get('/tickets/{ticket}/edit', [TicketController::class, 'edit'])->name('tickets.edit');
-Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
-Route::put('/tickets/{ticket}', [TicketController::class, 'update'])->name('tickets.update');
+// ---------------------------------------------------
+// Rotas Públicas (usuário não logado pode ver eventos)
+// ---------------------------------------------------
+
+Route::resource('events', EventController::class)
+    ->only(['index', 'show']);
+
+Route::resource('events.tickets', TicketController::class)
+    ->only(['index', 'show']);
+
+
+// ---------------------------------------------------
+// Rotas para organizadores (CRUD total)
+// ---------------------------------------------------
+Route::middleware(['auth', 'organizer'])
+    ->prefix('organizer')
+    ->name('organizer.')
+    ->group(function () {
+
+    Route::resource('events', EventController::class)
+        ->except(['index', 'show']);
+
+    Route::resource('events.tickets', TicketController::class)
+        ->except(['index', 'show']);
+});
+
+
+// ---------------------------------------------------
+// Breeze (Dashboard + profile)
+// ---------------------------------------------------
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
+require __DIR__ . '/auth.php';

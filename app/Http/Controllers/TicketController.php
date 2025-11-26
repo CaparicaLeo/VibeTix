@@ -32,7 +32,7 @@ class TicketController extends Controller
     }
     public function create(Event $event)
     {
-        return view('tickets.create', compact('event'));
+        return view('tickets.organizer.create', compact('event'));
     }
     public function edit(Ticket $ticket)
     {
