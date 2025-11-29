@@ -21,6 +21,16 @@ Route::resource('events.tickets', TicketController::class)
     ->only(['index', 'show']);
 
 
+/*
+    Rotas para usuários autenticados (CRUD limitado)
+*/
+Route::middleware(['auth'])
+    ->group(function () {
+
+        Route::resource('inscriptions', App\Http\Controllers\InscriptionController::class)
+            ->only(['index', 'show', 'store', 'create']);
+    });
+
 // ---------------------------------------------------
 // Rotas para organizadores (CRUD total)
 // ---------------------------------------------------
@@ -29,12 +39,12 @@ Route::middleware(['auth', 'organizer'])
     ->name('organizer.')
     ->group(function () {
 
-    Route::resource('events', EventController::class)
-        ->except(['index', 'show']);
+        Route::resource('events', EventController::class)
+            ->except(['index', 'show']);
 
-    Route::resource('events.tickets', TicketController::class)
-        ->except(['index', 'show']);
-});
+        Route::resource('events.tickets', TicketController::class)
+            ->except(['index', 'show']);
+    });
 
 
 // ---------------------------------------------------

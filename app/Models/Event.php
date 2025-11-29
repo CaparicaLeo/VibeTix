@@ -15,10 +15,14 @@ class Event extends Model
         'date_time',
         'location',
         'banner_image_url',
-        'status'
+        'status',
+        'organizer_id'
     ];
 
     public function tickets(){
         return $this->hasMany(Ticket::class);
+    }
+    public function organizer(){
+        return $this->belongsTo(User::class, 'organizer_id');
     }
 }
