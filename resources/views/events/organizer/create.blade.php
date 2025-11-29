@@ -20,7 +20,7 @@
     <div class="card shadow-sm">
         <div class="card-body">
 
-            <form action="{{ route('events.store') }}" method="POST">
+            <form action="{{ route('organizer.events.store') }}" method="POST">
                 @csrf
 
                 <div class="mb-3">
