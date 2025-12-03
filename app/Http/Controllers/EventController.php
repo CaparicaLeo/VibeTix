@@ -28,6 +28,9 @@ class EventController extends Controller
             'banner_image_url' => 'nullable|string',
             'status' => 'nullable|string'
         ]);
+        if (Auth::user()->role === 'organizer') {
+            $validatedData['organizer_id'] = Auth::id();
+        }
 
         Event::create($validatedData);
 
@@ -36,10 +39,12 @@ class EventController extends Controller
     }
     public function show(Event $event)
     {
-        if (Auth::user()->role === 'organizer') { {
-                return view('events.organizer.show', ['event' => $event]);
-            }
-            return view('events.show', ['event' => $event]);
+        $event->load('tickets');
+
+        if(Auth::check() && Auth::user()->role ==='organizer'){
+            return view('events.organizer.show', compact('event'));
         }
+
+        return view('events.show', compact('event'));
     }
 }

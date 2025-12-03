@@ -26,7 +26,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('tickets.store', $event->id) }}" method="POST">
+                <form action="{{ route('organizer.events.tickets.store', $event->id) }}" method="POST">
                     @csrf
 
                     {{-- Tipo do Ticket --}}
