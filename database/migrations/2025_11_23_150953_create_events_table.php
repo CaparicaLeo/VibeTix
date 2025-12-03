@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('banner_image_url')->nullable();
             $table->enum('status', ['scheduled', 'on going', 'done', 'cancelled'])->default('scheduled');
             $table->timestamps();
+            $table->foreignUuid('organizer_id')->constrained('users')->onDelete('cascade');
         });
     }
 

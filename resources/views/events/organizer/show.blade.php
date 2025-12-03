@@ -62,7 +62,8 @@
             <div class="flex justify-between mb-4">
                 <h2 class="text-xl font-semibold">Tickets do Evento</h2>
 
-                <a href="#" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm">
+                <a href="{{ route('organizer.events.tickets.create', $event->id) }}"
+                    class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm">
                     + Criar Ticket
                 </a>
             </div>

@@ -1,98 +1,54 @@
 @extends('layouts.app')
 
-@section('title', $event->title)
-
 @section('content')
-    <div class="max-w-5xl mx-auto px-4 py-10">
+    <div class="container">
 
-        <a href="{{ route('events.index') }}" class="text-gray-400 hover:text-gray-200 mb-6 inline-block">
-            ← Voltar
-        </a>
+        <h1 class="mb-4">{{ $event->title }}</h1>
 
-        <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-xl overflow-hidden">
+        <p class="text-muted">{{ $event->description }}</p>
 
-            {{-- Banner --}}
-            @if ($event->banner_image_url)
-                <img src="{{ $event->banner_image_url }}" class="w-full h-64 object-cover">
-            @else
-                <div class="w-full h-64 bg-gray-700 flex items-center justify-center">
-                    <span class="text-gray-400">Sem imagem</span>
-                </div>
-            @endif
+        <hr>
 
-            <div class="p-8">
+        <h3 class="mt-4">Ingressos disponíveis</h3>
 
-                {{-- Cabeçalho --}}
-                <div class="flex justify-between items-start mb-6">
-                    <h1 class="text-3xl font-bold text-white">{{ $event->title }}</h1>
+        @if ($event->tickets->count() === 0)
+            <p class="text-muted">Nenhum ticket cadastrado para este evento.</p>
+        @endif
 
-                    @php
-                        $colors = [
-                            'scheduled' => 'bg-blue-600 text-white',
-                            'on going' => 'bg-yellow-400 text-gray-900',
-                            'done' => 'bg-green-600 text-white',
-                            'cancelled' => 'bg-red-600 text-white',
-                        ];
-                        $statusColor = $colors[$event->status] ?? 'bg-gray-600 text-white';
-                    @endphp
+        <div class="row mt-3">
 
-                    <span class="px-4 py-2 rounded-md text-sm font-semibold {{ $statusColor }}">
-                        {{ ucfirst($event->status) }}
-                    </span>
-                </div>
+            @foreach ($event->tickets as $ticket)
+                <div class="col-md-4">
+                    <div class="card mb-3 shadow-sm">
 
-                <p class="text-gray-300 mb-2">
-                    <strong>Local:</strong> {{ $event->location ?? 'Não informado' }}
-                </p>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $ticket->name }}</h5>
 
-                <p class="text-gray-300 mb-6">
-                    <strong>Data:</strong>
-                    {{ optional($event->date_time)->format('d/m/Y') ?? 'Sem data' }}
-                </p>
+                            <p class="card-text">
+                                <strong>Preço:</strong>
+                                @if ($ticket->price > 0)
+                                    R$ {{ number_format($ticket->price, 2, ',', '.') }}
+                                @else
+                                    Gratuito
+                                @endif
+                            </p>
 
-                <hr class="border-gray-700 my-6">
+                            <form method="POST" action="{{ route('inscriptions.create') }}">
+                                @csrf
+                                <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
 
-                {{-- Descrição --}}
-                <h2 class="text-xl font-semibold text-white mb-2">Descrição</h2>
-                <p class="text-gray-300 mb-6">
-                    {{ $event->description ?? 'Nenhuma descrição fornecida.' }}
-                </p>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    Inscrever-se com este ticket
+                                </button>
+                            </form>
 
-                <hr class="border-gray-700 my-6">
-
-                {{-- Tickets --}}
-                <h2 class="text-xl font-semibold text-white mb-4">Tickets</h2>
-
-                @if ($event->tickets->count())
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full border border-gray-700 rounded-lg overflow-hidden">
-                            <thead class="bg-gray-700">
-                                <tr>
-                                    <th class="px-4 py-3 text-left text-gray-300">Tipo</th>
-                                    <th class="px-4 py-3 text-left text-gray-300">Preço</th>
-                                    <th class="px-4 py-3 text-left text-gray-300">Quantidade</th>
-                                </tr>
-                            </thead>
-
-                            <tbody class="bg-gray-800">
-                                @foreach ($event->tickets as $ticket)
-                                    <tr class="border-t border-gray-700">
-                                        <td class="px-4 py-3 text-gray-200">{{ $ticket->name }}</td>
-                                        <td class="px-4 py-3 text-gray-200">
-                                            R$ {{ number_format($ticket->price, 2, ',', '.') }}
-                                        </td>
-                                        <td class="px-4 py-3 text-gray-200">{{ $ticket->quantity_total }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-
-                        </table>
+                        </div>
                     </div>
-                @else
-                    <p class="text-gray-400">Nenhum ticket criado ainda.</p>
-                @endif
+                </div>
+            @endforeach
 
-            </div>
         </div>
+
     </div>
 @endsection
