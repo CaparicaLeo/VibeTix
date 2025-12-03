@@ -11,8 +11,10 @@ use Illuminate\Support\Facades\Auth;
 
 class InscriptionController extends Controller
 {
-    public function index(User $user)
+    public function index()
     {
+        $user = Auth::user();
+
         $inscriptions = Inscription::where('user_id', $user->id)->with('event', 'ticket')->get();
         return view('inscriptions.index', compact('inscriptions'));
     }
@@ -26,6 +28,12 @@ class InscriptionController extends Controller
             'event_id' => 'required|uuid|exists:events,id',
             'ticket_id' => 'required|uuid|exists:tickets,id',
         ]);
+
+        $ticket = \App\Models\Ticket::find($data['ticket_id']);
+        if ($ticket->event_id !== $data['event_id']) {
+            return back()->withErrors(['ticket_id' => 'O ticket selecionado não pertence a este evento.']);
+        }
+
         $data['user_id'] = Auth::id();
         $data['status'] = 'pending';
         $data['qr_code'] = Str::uuid();
@@ -33,8 +41,10 @@ class InscriptionController extends Controller
         Inscription::create($data);
         return redirect()->route('inscriptions.index', ['user' => $data['user_id']]);
     }
-    public function create()
+    public function create(Event $event)
     {
-        return view('inscriptions.create');
+        $tickets = $event->tickets;
+
+        return view('inscriptions.create', compact('event', 'tickets'));
     }
 }

@@ -28,8 +28,11 @@ Route::middleware(['auth'])
     ->group(function () {
 
         Route::resource('inscriptions', App\Http\Controllers\InscriptionController::class)
-            ->only(['index', 'show', 'store', 'create']);
+            ->only(['index', 'show', 'store']);
     });
+Route::get('/inscriptions/create/{event}', [App\Http\Controllers\InscriptionController::class, 'create'])
+    ->middleware('auth')
+    ->name('inscriptions.create');  
 
 // ---------------------------------------------------
 // Rotas para organizadores (CRUD total)
