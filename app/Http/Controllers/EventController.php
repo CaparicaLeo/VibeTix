@@ -58,4 +58,59 @@ class EventController extends Controller
     {
         return view('events.organizer.edit', compact('event'));
     }
+    public function update(Request $request, Event $event)
+    {
+        // Verificar se o usuário é o organizador do evento
+        if (Auth::id() !== $event->organizer_id) {
+            abort(403, 'Você não tem permissão para editar este evento.');
+        }
+
+        // Validar os dados
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'date_time' => 'required|date|after:now',
+            'location' => 'required|string|max:255',
+            'status' => 'required|string|in:scheduled,active,cancelled,completed',
+            'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max
+        ]);
+
+        // Processar upload de banner (se houver)
+        if ($request->hasFile('banner_image')) {
+            // Deletar banner antigo se existir
+            if ($event->banner_image_url) {
+                $oldPath = str_replace('/storage/', '', $event->banner_image_url);
+                Storage::disk('public')->delete($oldPath);
+            }
+
+            // Fazer upload do novo banner
+            $path = $request->file('banner_image')->store('banners', 'public');
+            $validatedData['banner_image_url'] = Storage::url($path);
+        }
+
+        // Atualizar o evento
+        $event->update($validatedData);
+
+        return redirect()->route('events.show', $event->id)
+            ->with('success', 'Evento atualizado com sucesso!');
+    }
+    public function destroy(Event $event)
+    {
+        // Verificar se o usuário é o organizador do evento
+        if (Auth::id() !== $event->organizer_id) {
+            abort(403, 'Você não tem permissão para excluir este evento.');
+        }
+
+        // Deletar banner se existir
+        if ($event->banner_image_url) {
+            $oldPath = str_replace('/storage/', '', $event->banner_image_url);
+            Storage::disk('public')->delete($oldPath);
+        }
+
+        // Deletar o evento (e tickets em cascata se configurado)
+        $event->delete();
+
+        return redirect()->route('events.index')
+            ->with('success', 'Evento excluído com sucesso!');
+    }
 }
