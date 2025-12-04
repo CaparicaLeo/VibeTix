@@ -46,14 +46,14 @@
                             
                             {{-- Imagem do Evento --}}
                             <div class="md:w-64 h-48 md:h-auto bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center relative overflow-hidden">
-                                @if($inscription->event->image ?? false)
-                                    <img src="{{ $inscription->event->image }}" alt="{{ $inscription->event->name }}" class="w-full h-full object-cover">
+                                @if($inscription->event->banner_image_url ?? false)
+                                    <img src="{{ $inscription->event->banner_image_url }}" alt="{{ $inscription->event->title }}" class="w-full h-full object-cover">
                                 @else
                                     <div class="text-center text-white p-6">
                                         <svg class="w-16 h-16 mx-auto mb-2 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                         </svg>
-                                        <p class="font-semibold text-sm">{{ $inscription->event->name ?? 'Evento' }}</p>
+                                        <p class="font-semibold text-sm">{{ $inscription->event->title ?? 'Evento' }}</p>
                                     </div>
                                 @endif
                                 
@@ -80,7 +80,7 @@
                                     {{-- Informações do Evento --}}
                                     <div class="flex-1">
                                         <h3 class="text-2xl font-bold text-gray-900 mb-2">
-                                            {{ $inscription->event->name ?? '—' }}
+                                            {{ $inscription->event->title ?? '—' }}
                                         </h3>
                                         
                                         <div class="space-y-2 mb-4">

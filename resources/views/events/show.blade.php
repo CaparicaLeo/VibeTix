@@ -106,22 +106,6 @@
                                             </span>
                                         @endif
                                     </div>
-                                    <div class="flex items-center gap-3">
-                                        <button type="button" 
-                                            onclick="this.parentNode.querySelector('input').stepDown()"
-                                            class="w-8 h-8 rounded-full border-2 border-gray-500 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
-                                        </button>
-                                        <input type="number" 
-                                            name="tickets[{{ $ticket->id }}]" 
-                                            value="0" min="0" max="10" 
-                                            class="w-8 bg-transparent border-none text-center font-bold text-xl text-gray-800 p-0 focus:ring-0">
-                                        <button type="button" 
-                                            onclick="this.parentNode.querySelector('input').stepUp()"
-                                            class="w-8 h-8 rounded-full border-2 border-black flex items-center justify-center text-black hover:bg-gray-200 transition">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                                        </button>
-                                    </div>
                                 </div>
                             @empty
                                 <div class="p-4 bg-gray-100 rounded text-center text-gray-500">
