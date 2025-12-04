@@ -14,16 +14,27 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-white">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-800" />
+    <body class="font-sans antialiased">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900">
+
+            <!-- Logo -->
+            <div class="mb-8">
+                <a href="/" class="flex items-center">
+                    <span class="text-white text-4xl font-bold italic">Vibe</span>
+                    <span class="text-white text-4xl font-bold">Tix</span>
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <!-- Card -->
+            <div class="w-full sm:max-w-md px-6 py-8 bg-white shadow-2xl overflow-hidden sm:rounded-2xl">
                 {{ $slot }}
+            </div>
+
+            <!-- Footer Links -->
+            <div class="mt-6 text-center">
+                <p class="text-purple-200 text-sm">
+                    &copy; {{ date('Y') }} VibeTix. Todos os direitos reservados.
+                </p>
             </div>
         </div>
     </body>

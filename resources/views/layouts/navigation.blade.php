@@ -1,132 +1,123 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-200">
-    <!-- Primary Navigation Menu -->
+<nav x-data="{ open: false }" class="bg-gradient-to-r from-purple-600 to-purple-700 shadow-lg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
-                    </a>
-                </div>
+        <div class="flex justify-between items-center h-16">
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-800 hover:text-gray-600">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+            <!-- Logo -->
+            <div class="flex items-center">
+                <a href="{{ route('events.index') }}" class="flex items-center">
+                    <span class="text-white text-2xl font-bold italic">Vibe</span>
+                    <span class="text-white text-2xl font-bold">Tix</span>
+                </a>
+            </div>
+
+            <!-- Search Bar (Desktop) -->
+            <div class="hidden md:flex flex-1 max-w-md mx-8">
+                <div class="relative w-full">
+                    <input type="text"
+                           placeholder="Buscar artistas e eventos"
+                           class="w-full px-4 py-2 pl-10 rounded-lg bg-white text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300">
+                    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
                 </div>
             </div>
 
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <!-- Right Side Navigation -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="{{ route('events.index') }}" class="text-white hover:text-purple-200 transition">
+                    Eventos
+                </a>
 
                 @auth
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
-                            <button
-                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-800 bg-white hover:text-gray-600 hover:bg-gray-100 transition ease-in-out duration-150">
-
-                                <div>{{ Auth::user()->name }}</div>
-
-                                <div class="ms-1">
-                                    <svg class="fill-current h-4 w-4 text-gray-800" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </div>
+                            <button class="flex items-center text-white hover:text-purple-200 transition">
+                                <span>{{ Auth::user()->name }}</span>
+                                <svg class="ml-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
                             </button>
                         </x-slot>
 
                         <x-slot name="content">
-                            <x-dropdown-link :href="route('profile.edit')" class="text-gray-800 hover:text-gray-600">
-                                {{ __('Profile') }}
+                            <x-dropdown-link :href="route('dashboard')">
+                                Dashboard
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('inscriptions.index')">
+                                Minhas Inscrições
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('profile.edit')">
+                                Perfil
                             </x-dropdown-link>
 
-                            <!-- Logout -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-
                                 <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault(); this.closest('form').submit();"
-                                    class="text-gray-800 hover:text-gray-600">
-                                    {{ __('Log Out') }}
+                                    onclick="event.preventDefault(); this.closest('form').submit();">
+                                    Sair
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
                     </x-dropdown>
                 @else
-                    <a href="{{ route('login') }}" class="text-gray-800 mr-4 hover:text-gray-600">Login</a>
-                    <a href="{{ route('register') }}" class="text-gray-800 hover:text-gray-600">Registrar</a>
+                    <a href="{{ route('login') }}" class="text-white hover:text-purple-200 transition">
+                        Login
+                    </a>
+                    <a href="{{ route('register') }}" class="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-purple-50 transition">
+                        Cadastrar
+                    </a>
                 @endauth
-
             </div>
 
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-800 hover:text-gray-600 hover:bg-gray-100 transition duration-150 ease-in-out">
+            <!-- Mobile menu button -->
+            <div class="md:hidden">
+                <button @click="open = ! open" class="text-white p-2">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
-                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        <path :class="{ 'hidden': open, 'inline-flex': !open }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden bg-white">
+    <!-- Mobile Menu -->
+    <div :class="{ 'block': open, 'hidden': !open }" class="hidden md:hidden bg-purple-700">
+        <div class="px-4 pt-2 pb-3 space-y-1">
+            <!-- Mobile Search -->
+            <div class="mb-4">
+                <input type="text"
+                       placeholder="Buscar artistas e eventos"
+                       class="w-full px-4 py-2 rounded-lg bg-white text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300">
+            </div>
 
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-800 hover:text-gray-600">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
+            <a href="{{ route('events.index') }}" class="block px-3 py-2 text-white hover:bg-purple-600 rounded">
+                Eventos
+            </a>
 
             @auth
-                <div class="px-4">
-                    <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                    <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-                </div>
-
-                <div class="mt-3 space-y-1">
-                    <x-responsive-nav-link :href="route('profile.edit')" class="text-gray-800 hover:text-gray-600">
-                        {{ __('Profile') }}
-                    </x-responsive-nav-link>
-
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-
-                        <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault(); this.closest('form').submit();"
-                            class="text-gray-800 hover:text-gray-600">
-                            {{ __('Log Out') }}
-                        </x-responsive-nav-link>
-                    </form>
-                </div>
+                <a href="{{ route('dashboard') }}" class="block px-3 py-2 text-white hover:bg-purple-600 rounded">
+                    Dashboard
+                </a>
+                <a href="{{ route('inscriptions.index') }}" class="block px-3 py-2 text-white hover:bg-purple-600 rounded">
+                    Minhas Inscrições
+                </a>
+                <a href="{{ route('profile.edit') }}" class="block px-3 py-2 text-white hover:bg-purple-600 rounded">
+                    Perfil
+                </a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="w-full text-left px-3 py-2 text-white hover:bg-purple-600 rounded">
+                        Sair
+                    </button>
+                </form>
             @else
-                <div class="px-4">
-                    <div class="font-medium text-base text-gray-800">Visitante</div>
-                    <div class="font-medium text-sm text-gray-500">Acesse sua conta</div>
-                </div>
-
-                <div class="mt-3 space-y-1">
-                    <x-responsive-nav-link :href="route('login')" class="text-gray-800 hover:text-gray-600">
-                        Login
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('register')" class="text-gray-800 hover:text-gray-600">
-                        Registrar
-                    </x-responsive-nav-link>
-                </div>
+                <a href="{{ route('login') }}" class="block px-3 py-2 text-white hover:bg-purple-600 rounded">
+                    Login
+                </a>
+                <a href="{{ route('register') }}" class="block px-3 py-2 text-white hover:bg-purple-600 rounded">
+                    Cadastrar
+                </a>
             @endauth
         </div>
     </div>
