@@ -47,6 +47,8 @@ Route::middleware(['auth', 'organizer'])
 
         Route::resource('events.tickets', TicketController::class)
             ->except(['index', 'show']);
+
+            
     });
 
 
