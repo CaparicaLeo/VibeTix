@@ -21,20 +21,23 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
-        if ($request->hasFile('banner_file')) {
-            $path = $request->file('banner_file')->store('banners', 'public');
-            $data['banner_image_url'] = Storage::url($path);
-        } elseif ($request->banner_image_url) {
-            $data['banner_image_url'] = $request->banner_image_url;
-        }
         $validatedData = $request->validate([
-            'title' => 'required|string',
+            'title' => 'required|string|max:255',
             'description' => 'required|string',
             'date_time' => 'required|date|after:now',
-            'location' => 'required|string',
-            'banner_image_url' => 'nullable|string',
-            'status' => 'nullable|string'
+            'location' => 'required|string|max:255',
+            'banner_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // 10MB
+            'banner_image_url' => 'nullable|url',
+            'status' => 'required|string|in:scheduled,on going,done,cancelled'
         ]);
+
+        // Processar a imagem do banner
+        if ($request->hasFile('banner_file')) {
+            $path = $request->file('banner_file')->store('banners', 'public');
+            $validatedData['banner_image_url'] = Storage::url($path);
+        } elseif ($request->filled('banner_image_url')) {
+            $validatedData['banner_image_url'] = $request->banner_image_url;
+        }
         if (Auth::user()->role === 'organizer') {
             $validatedData['organizer_id'] = Auth::id();
         }
