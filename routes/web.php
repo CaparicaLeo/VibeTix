@@ -47,6 +47,8 @@ Route::middleware(['auth', 'organizer'])
 
         Route::resource('events.tickets', TicketController::class)
             ->except(['index', 'show']);
+
+            
     });
 
 
@@ -55,7 +57,12 @@ Route::middleware(['auth', 'organizer'])
 // ---------------------------------------------------
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('dashboard', [
+        'eventsCount' => \App\Models\Event::where('status', 'scheduled')->count(),
+        'inscriptionsCount' => auth()->user()->inscriptions()->count(),
+        'myEventsCount' => auth()->user()->events()->count(), // se for organizador
+        'upcomingCount' => \App\Models\Event::where('date_time', '>', now())->count(),
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
