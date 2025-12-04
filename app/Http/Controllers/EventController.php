@@ -54,4 +54,8 @@ class EventController extends Controller
 
         return view('events.show', compact('event'));
     }
+    public function edit(Event $event)
+    {
+        return view('events.organizer.edit', compact('event'));
+    }
 }
