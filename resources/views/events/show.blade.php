@@ -6,7 +6,7 @@
         .font-inter { font-family: 'Inter', sans-serif; }
     </style>
 
-    <div class="bg-white font-inter pb-20">
+    <div class="bg-white font-inter pb-20 -mt-8">
 
         {{-- 1. BANNER DE FUNDO --}}
         <div class="w-full h-[250px] md:h-[350px] overflow-hidden relative bg-gray-300">
@@ -24,12 +24,11 @@
         </div>
 
         {{-- 2. CONTEÚDO PRINCIPAL --}}
-        {{-- O -mt-24/-mt-40 puxa TUDO para cima --}}
         <div class="max-w-[1200px] mx-auto px-6 -mt-24 md:-mt-40 relative z-10">
             
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
 
-                {{-- COLUNA ESQUERDA (Poster sobe por causa do container pai) --}}
+                {{-- COLUNA ESQUERDA --}}
                 <div class="lg:col-span-7">
                     
                     {{-- Poster --}}
@@ -79,17 +78,16 @@
                         <div class="w-full border-t border-gray-300 my-8"></div>
 
                         <div>
-                            <h3 class="font-bold text-lg mb-4 uppercase">DESCRIÇÃO</h3>
-                            <div class="text-gray-800 leading-relaxed whitespace-pre-line text-base">
-                                {{ $event->description }}
+                            <h3 class="font-bold text-lg mb-0 leading-none uppercase">DESCRIÇÃO</h3>
+                            
+                            <div class="text-gray-800 leading-snug whitespace-pre-line text-base mt-0">
+                                {{ trim($event->description) }}
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {{-- COLUNA DIREITA (Ingressos) --}}
-                {{-- ALTERAÇÃO AQUI: lg:mt-48 --}}
-                {{-- O 'lg:mt-48' empurra essa coluna para baixo, compensando o -mt-40 do pai e adicionando um espaço extra --}}
                 <div class="lg:col-span-5 mt-10 lg:mt-48">
                     <h2 class="font-bold text-xl mb-6 uppercase">INGRESSOS</h2>
 
