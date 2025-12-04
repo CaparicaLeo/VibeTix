@@ -19,10 +19,21 @@ class Event extends Model
         'organizer_id'
     ];
 
-    public function tickets(){
+    public function tickets()
+    {
         return $this->hasMany(Ticket::class);
     }
-    public function organizer(){
+    public function organizer()
+    {
         return $this->belongsTo(User::class, 'organizer_id');
+    }
+    public function getIsActiveAttribute()
+    {
+        return $this->date_time && now()->lt($this->date_time);
+    }
+
+    public function getHasPassedAttribute()
+    {
+        return $this->date_time && now()->gt($this->date_time);
     }
 }
